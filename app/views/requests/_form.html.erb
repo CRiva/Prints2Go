@@ -1,0 +1,233 @@
+<%= form_for @request, :html => {:class => "form-group", :multipart => true} do |f| %>
+
+<div class="row westmontTextMuseo3">
+	<div class="col-xs-12">
+		<% if @request.errors.any? %>
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>Warning!</strong> <%= pluralize(@request.errors.count, "error") %> prevented your request from being saved! They are: <%= @request.errors.full_messages.join(", ") %>. 
+		</div>
+		<% end %>
+		<div class="row">
+			<div class="col-xs-12">
+				<h4>For estimated cost of a poster, please call Reprographics.</h4>
+			</div>
+		</div>
+		<legend>Print Information</legend>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-4 col-xs-offset-4 <%= @request.errors[:requester].any? ? 'has-error' : '' %>"
+		<h5>If the requester of this print Job is not you, please fill in the requester's userid.</h5>
+		<%= f.text_field :requester, class: "form-control westmontTextMuseo3" %>
+	</div>
+</div>
+<div class="row westmontTextMuseo9">
+	<div class="col-xs-6 <%= @request.errors[:jobtitle].any? ? 'has-error' : '' %>">
+		<%= f.label :jobtitle, "Job Title" %>
+		<%= f.text_field :jobtitle, placeholder: "e.g. Spanish Class Handout", style: "width: 95%", class: "form-control westmontTextMuseo3", required: true %>
+	</div>
+	<div class="col-xs-6 <%= @request.errors[:costcenter].any? ? 'has-error' : '' %>">
+		<%= f.label :costcenter, "Cost Center" %>
+		<%= select :request, :costcenter, options_for_select(CostCenters.costcenters, @request.costcenter), {prompt: 'Please Select'},{ :class => 'form-control westmontTextMuseo3'} %>
+	</div>
+</div>
+
+<div class="row westmontTextMuseo9">
+	<div class="col-xs-6 <%= @request.errors[:pickup_date].any? ? 'has-error' : '' %>">
+		<%= f.label :pickup_date, "Pickup time" %>
+		<%= f.text_field :pickup_date, placeholder: 'e.g. Tomorrow at 3 PM', style: "width: 95%", class: "form-control westmontTextMuseo3", required: true %>
+		
+	</div>
+	<div class="col-xs-3 <%= @request.errors[:originals].any? ? 'has-error' : '' %>">
+		<%= f.label :originals, "# of Pages" %>
+		<%= f.number_field :originals,  style:  "width: 95%", class: "form-control westmontTextMuseo3",  required: true %>
+	</div>
+	<div class="col-xs-3 <%= @request.errors[:copies].any? ? 'has-error' : '' %>">
+		<%= f.label :copies, "# of Copies" %>
+		<%= f.number_field :copies,  style:  "width: 95%", class: "form-control westmontTextMuseo3",  required: true %>
+	</div>
+</div>
+<br>
+
+<%= f.fields_for :request_attachments do |ra| %>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="btn-group">
+			<%= link_to ra.object.file.url.to_s.split('/')[-1], ra.object.file.url, :class => "btn btn-sm btn-default", :style => "width: 300px" %>
+			<%= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, ra.object, method: :delete, data: { confirm: 'Are you sure?'}, :class => "btn btn-sm btn-danger"%>
+			</div>
+		</div>
+	</div>
+<% end %>
+<br>
+<div class="row westmontTextMuseo3" id="uploader">
+	<div class="col-xs-12">
+		<label class="btn btn-info"> Upload Files
+			<%= file_field_tag :request_attachment_file, :multiple => true, name: "request_attachments[file][]", :style => "display: none", type: "file" %>
+			<%= hidden_field_tag :file_cache %> 
+		</label>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12" id="uploaded-files">
+		<span style="display: none">This will get blown over if files exist</span>
+	</div>
+</div>
+
+<br>
+
+<legend class="westmontTextMuseo3">Options</legend>
+
+<div class="row">
+	<div class="col-xs-6" id="sides">
+		<label class="radio-inline"><%= f.radio_button :sides, "1 Sided", :checked => true %>1 Sided</label>
+		<label class="radio-inline"><%= f.radio_button :sides, "2 Sided" %>2 Sided</label>
+	</div>
+	<div class="col-xs-6" id="color">
+		<label class="radio-inline"><%= f.radio_button :color_copy, "Print Black/White", :checked => true %> Print Black/White </label>
+		<label class="radio-inline"><%= f.radio_button :color_copy, "Print Color" %> Print Color </label>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-xs-6">
+		<%= f.label :weight, "Paper Weight" %>
+		<%= f.select :weight, options_for_select(getOptions("Weight"), {:selected => @request.weight.nil? ? "Regular" : @request.weight}), {}, { :class => 'form-control', :id => "weight"} %>
+	</div>
+		<div class="col-xs-6">
+		<%= f.label :size, "Size" %>
+    	<%= f.select :size, options_for_select(getOptions("Size"), {:selected => @request.size.nil? ? "8.5x11" : @request.size}), {}, { :class => 'form-control', :id => "size"}  %>
+    </div>
+</div>
+<div class="row">
+	<div class="col-xs-6">
+		<%= f.label :binding, "Paper Binding" %>
+		<%= f.select :binding, options_for_select(getOptions("Binding"), {:selected => @request.binding.nil? ? "No Binding" : @request.binding}), {}, { :class => 'form-control', :id => "binding"} %>
+    </div>
+    <div class="col-xs-6">
+		<%= f.label :folding, "Paper Folding" %>
+		<%= f.select :folding, options_for_select(getOptions("Folding"), {:selected => @request.folding.nil? ? "No Folding" : @request.folding}), {}, { :class => 'form-control', :id => "folding"} %>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-6">
+		<%= f.label :color, "Paper Color" %>
+	</div>
+	<div class="col-xs-6">
+    	<%= f.label :special_info, "Special Instructions for Other Folding" %>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-xs-6">
+		<div class="row">
+			<div id="preview" class="col-xs-6 swatch-main" style="background-color:#fff;" >
+			</div>
+			<div class="col-xs-5">
+				<span id="color-name">White</span><br>
+				<%= f.text_field :color, style: "display:none;" %>
+				<input id="color-field" value="White" style="display:none;">
+				<div class="dropdown">
+					<a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="#" style="color:#000;">Change Color</a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+						<table>
+							<tr>
+								<td><div id="Red" class="swatch swatch-clickable" style="background-color:#d11600"></div></td>
+								<td><div id="Orange" class="swatch swatch-clickable" style="background-color:#f96302"></div></td>
+								<td><div id="Banana" class="swatch swatch-clickable" style="background-color:#ffed38"></div></td>
+								<td><div id="Lemon" class="swatch swatch-clickable" style="background-color:#e5e111"></div></td>
+								<td><div id="Lime" class="swatch swatch-clickable" style="background-color:#cee007"></div></td>
+								<td><div id="Evergreen" class="swatch swatch-clickable" style="background-color:#339e35"></div></td>
+							</tr>
+							<tr>
+								<td><div id="Lunar Blue" class="swatch swatch-clickable" style="background-color:#60afdd"></div></td>
+								<td><div id="Grape" class="swatch swatch-clickable" style="background-color:#9b4f96"></div></td>
+								<td><div id="Hot-Pink" class="swatch swatch-clickable" style="background-color:#fc0093"></div></td>
+								<td><div id="Sagebrush" class="swatch swatch-clickable" style="background-color:#c6c699"></div></td>
+								<td><div id="Tan" class="swatch swatch-clickable" style="background-color:tan"></div></td>
+								<td><div id="White" class="swatch swatch-clickable" style="background-color:white"></div></td>
+							</tr>
+						</table>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xs-6">
+  		<%= f.text_area :special_info, :rows => 2, :class => 'form-control'  %>
+	</div>
+</div>
+
+<hr>
+
+<div class="row">
+	<div class="col-xs-6 col-xs-offset-3">
+		<table class="table">
+			<tr>
+				<td style="border-top: none">
+					<%= f.check_box :collate, :id => "collate" %> Collate
+				</td>
+				<td style="border-top: none">
+					<%= f.check_box :staple, :id => "staple" %> Staple		
+				</td>
+				<td style="border-top: none">
+					<%= f.check_box :threehole, :id => "threehole" %> 3 Hole Punch 
+				</td>
+			</tr>
+			<tr>
+			
+			</tr>
+			<tr>
+				<td style="border-top: none">
+					<%= f.check_box :laminate, :id => "laminate"%> Laminate
+				</td>
+				<td style="border-top: none">
+					<%= f.check_box :clear_cover, :id => "clear-cover" %> Clear Cover		
+				</td>
+				<td style="border-top: none">
+					<%= f.check_box :black_back, :id => "black-back" %> Black Vinyl Back 
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<i>
+	Estimated Cost for this Print: $<span id="estimated-cost"><%=f.object.estimate%></span>
+	<%= f.hidden_field :estimate, :value => 0.04, :id => "estimate" %>
+	<%= f.hidden_field :otherestimate, :value => 0.00 %>
+</i>
+<br>
+<br>
+<div>
+	<%= f.submit (@edit)? 'Update Request':'Submit Request', :class => 'btn btn-info btn-lg' %>
+</div>
+
+<% end %>
+
+<script>
+// Handles color picker
+$(document).ready(function() {
+	color = $("#request_color").val();
+	if (color == "") {
+		$("#request_color").val("White")
+	} else {
+		$("#preview").css('background-color', $("#" + color).css('background-color'));
+		$("#color-name").html(color);
+	}
+
+	$('.swatch-clickable').each(function () {
+		$(this).attr('title', $(this).attr('id'));
+	});
+	$('.swatch-clickable').tooltip();
+});
+
+$(".swatch-clickable").click(function() {
+	$("#preview").css('background-color', $(this).css('background-color'));
+	$("#color-name").html($(this).attr("id"));
+	$("#request_color").val($(this).attr("id"))
+});
+</script>

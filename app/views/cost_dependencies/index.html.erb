@@ -1,0 +1,41 @@
+<div class="modal-content" id="dependency_modal">
+	<% @cost=Cost.find(params[:cost_id]) %>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Dependencies for - <%= @cost.category + " - " + @cost.option %></h3>
+	</div>
+	<div class="modal-body">
+		<table class='table table-striped'>
+   			<thead style='background-color: #5bc0de'>
+				<tr>
+					<th class="text-center">Dependent Category</th>
+					<th class="text-center">Dependent Option</th>
+					<th class="text-center">Cost Per Job</th>
+					<th class="text-center">Cost Per Page</th>
+					<% if admin %>
+						<th class="text-center">Action</th>
+					<% end %>
+				</tr>
+			</thead>
+			<% @cost.cost_dependencies.each do |d| %>
+			<tbody>
+				<tr>
+					<td><%= d.dependency_category %></td>
+					<td><%= d.dependency_option %></td>
+					<td><%= d.per_job %></td>
+					<td><%= d.per_page %></td>
+					<% if admin %>
+						<td>
+							<%= link_to '<i class="glyphicon glyphicon-pencil"></i>'.html_safe, "/costs/#{@cost.id}/cost_dependencies/#{d.id}/edit", class: 'btn btn-info' %>
+							<%= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, "/costs/#{@cost.id}/cost_dependencies/#{d.id}", method: :delete, data: { confirm: 'Are you sure?' },  class: 'btn btn-danger' %>	
+						</td>
+					<% end %> 
+				</tr>
+			</tbody>
+			<% end %>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>

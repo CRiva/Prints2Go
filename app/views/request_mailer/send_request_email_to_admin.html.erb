@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @username+" ("+@request.requester+")" %> has requested a Prints2Go Job.</h1>
+    <h4>
+    	Here are the details of the request:
+    </h4>
+    <p>
+    	Jobtitle: <%= @request.jobtitle %>
+    </p>
+    <p>
+    	Pickup: <%= @request.pickup_date %>
+    </p>
+    <a href="<REDACTED>">
+      Click here to view the request
+    </a>
+  </body>
+</html>

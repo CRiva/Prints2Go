@@ -1,0 +1,97 @@
+<!-- <h2 style="color: #49afcd" class="center-block westmontTextMuseo3">Requests</h2> JOHN RODKEY wanted this gone -->
+<br>
+
+<% unless notice.blank? %>
+	<% if flash[:notice] %>
+		<div class="alert alert-success"><%= flash[:notice] %></div>
+	<% elsif flash[:alert] %>
+		<div class="alert alert-error"><%= flash[:alert] %></div>
+	<% end %>
+<% end %>
+
+<% if !@requests.any? %>
+	<h1>You haven't made any requests yet.</h1>
+	<br>
+	<h3>To request a new print, click on the "new" button in the top left of the menu bar. </h3>
+<% else %>
+<div class="row">
+	<div class="col-xs-12">
+		<table class="table table-striped" style="box-shadow: 3px 3px 10px grey, -3px 3px 10px grey; table-layout: fixed; word-wrap: break-word;">
+			<thead style="background-color: #5bc0de">
+				<tr class="westmontTextMuseo9">
+					<!--<th class="text-center">ID</th>-->
+					<th class="text-center">Date</th>
+					<% if admin %>
+						<th class="text-center"><%= sortable "requester", "Requested by" %></th>
+					<% end %>
+					<th class="text-center" style="vertical-align: middle !important;"><%= sortable "jobtitle"%></th>
+					<th class="text-center">Copies</th>
+					<th class="text-center" style="width: 20%">File</th>
+					<th class="text-center"><%= sortable "pickup_date", "Pickup"%></th>
+					<th class="text-center"><%= sortable "status"%></th>
+					<th class="text-center" style="width: 15"><%= sortable "billed", "Action" %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<%= will_paginate @requests %>
+				<% @requests.each do |request| %>
+
+				<tr class="westmontTextMuseo3"> 
+					<!--<td style="vertical-align:middle;"><%= request.id %></td> -->
+					<td style="vertical-align:middle;"><%= request.created_at.strftime("%-m/%-d/%Y") %> </td>
+
+					<% if admin %>
+						<td style="vertical-align:middle;"> <%= request.requester %> </td>
+					<% end %>
+					<td style="vertical-align:middle;"><%= request.jobtitle %></td>
+					<td style="vertical-align:middle;"><%= request.copies %></td>
+					<td style="vertical-align:middle; width: 20%">
+					<% request.request_attachments.all.each do |ra| %>
+						<%= link_to(ra.file.to_s.split('/')[-1], ra.file.url) %>
+					<% end %>
+					</td>
+
+					<td style="vertical-align:middle;"><%= Time.parse(request.pickup_date).strftime("%-m/%-d/%Y, %k:%M") unless request.pickup_date.blank? %></td>
+
+					<td style="vertical-align:middle;">
+						<!-- <%= request.status %> -->
+						<% if request.status != "completed" %>
+							<%= 'Not yet completed' %>
+						<% elsif request.billed == true  %>
+							<%= 'Completed '+Time.parse(request.completion).strftime("%-m/%-d/%Y") %>
+						<% else %>
+							<%=	"Printed "+Time.parse(request.completion).strftime("%-m/%-d/%Y") %>
+						<% end %>
+					</td>
+
+					<td class="checkbox-table" style="vertical-align:middle; padding:0; width: 15%">
+						<div class="btn-toolbar" style="margin:0; height:100%">
+							<div class="btn-group btn-group-justified text-center" style="margin:0; height:100%">
+								<% if request.status != 'completed' and admin %>
+									<%= link_to '<i class="glyphicon glyphicon-ok"></i>'.html_safe, "/requests/#{request.id}/complete", class: 'btn btn-success', style: "padding: 20% 0% 20% 0%;" %>
+									<%= link_to '<i class="glyphicon glyphicon-pencil"></i>'.html_safe, "/requests/#{request.id}/edit", class: 'btn btn-info', style: "padding: 20% 0% 20% 0%;" %>
+									<%= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, request, method: :delete, data: { confirm: 'Are you sure?' },  class: 'btn btn-danger', style: "padding: 20% 0% 20% 0%;" %>
+								<% elsif request.status != 'completed' %>
+									<%= link_to '<i class="glyphicon glyphicon-pencil"></i>'.html_safe, "/requests/#{request.id}/edit", class: 'btn btn-info', style: "padding: 20% 0% 20% 0%;" %>
+									<%= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, request, method: :delete, data: { confirm: 'Are you sure?' },  class: 'btn btn-danger', style: "padding: 20% % 20% 0%;" %>
+								<% elsif request.status == 'completed' and request.billed == false %>
+									<%= link_to "/requests/#{request.id}/preview", class: 'btn btn-warning', style: "padding: 15% 3% 15% 3%;" do %>
+										<i class="glyphicon glyphicon-piggy-bank" style="font-size:150%; line-height:80%"></i>
+										<h5 style="margin:0px">To be billed</h5>
+									<% end %>
+								<% elsif request.status == 'completed' and request.billed == true %>
+									<%= link_to "/requests/#{request.id}/preview", class: 'btn btn-success', style: "padding: 10% 3% 10% 3%;" do %>
+										<i class="glyphicon glyphicon-sunglasses" style="font-size:150%; line-height:80%"></i>
+										<h5 style="margin:0px">Completed</h5>
+									<% end %>
+								<% end %>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
+<% end %>

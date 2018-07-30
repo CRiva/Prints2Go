@@ -1,0 +1,100 @@
+<nav class="navbar navbar-default navbar-fixed-top" style="background-color: rgba(110,14,24,0.9); border: 0px; min-height: 10px; height: 30px; top:65px">
+  <div class="container">
+    <ul class="nav-link nav navbar-nav navbar-left">
+      <li>
+        <a href="/requests/new">New</a>
+      </li>
+      <li>
+        <a href='/requests/index'>All</a>
+      </li>
+      <li>
+        <%= link_to 'Not Printed', requests_path(:filter => 'new')%>
+      </li>
+      <li> 
+        <%= link_to 'Unbilled', requests_path(:filter => 'unbilled') %>
+      </li>
+      <li>
+        <%= link_to 'Finished', requests_path(:filter => 'completed')%>
+      </li>
+      <li>
+        <a href="/costs">Costs</a>
+      </li>
+      <li>
+      <% if admin %>
+        <a href="/requests/preview">Billing</a>
+      <% else %>
+        <a href="/requests/preview">My Bill</a>
+      <% end %>
+      </li>
+    </ul>
+    <ul class="nav-link nav navbar-nav navbar-right">
+      <li>
+        <a href="/users/logout" style="padding-right: 0px !important;">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<nav class="navbar navbar-default navbar-fixed-top" style="background-color: rgba(110,14,24,0.9); border: 0px; height:65px;">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="<REDACTED>" style="height: 40px;">
+	      <span><%= image_tag('<REDACTED>', height: "40px") %> </span>
+	    </a>
+		</div>
+    <div class="navbar-header">
+      <h2 class="westmontTextMuseo9" style="color:white; line-height: 30px"> 
+        <a href='/requests' style='color: white; text-decoration: none;'>Prints2Go</a>
+      </h2> 
+    </div>
+    <ul class="welcome nav navbar-nav navbar-right">
+      <li>
+        Welcome <%= session[:cas_extra_attributes]["givenName"][0] %>
+      </li>
+    </ul>
+	</div>
+<!--</nav class="navbar navbar-default navbar-lower" style="background-color: rgba(110,14,24,0.9); border: 0px; height:25px;">
+  testing
+<nav> -->
+  
+</nav>
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner hidden-xs hidden-sm" style="overflow: hidden; min-height: 200px; max-height: 200px; width: 100%">
+    <div class="item active">
+      	<%= image_tag('<REDACTED>', :style => "background-size: cover; margin-top: -300px; background: no-repeat scroll center top transparent; height: auto") %>
+    </div>
+  </div>
+  <div class="carousel-inner hidden-md hidden-lg" style=" height: 200px; width: 150%">
+    <div class="item active">
+        <%= image_tag('<REDACTED>', :style => "margin-top: -300px; background: no-repeat scroll center top transparent;") %>
+    </div>
+  </div>
+</div>
+
+
+<!--
+<div id="carousel-example" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example" data-slide-to="1"></li>
+    <li data-target="#carousel-example" data-slide-to="2"></li>
+  </ol>
+
+  <div class="carousel-inner">
+    <div class="item active">
+      <a href="#"><img src="http://placekitten.com/1600/600" /></a>
+      <div class="carousel-caption">
+        <h3>Meow</h3>
+        <p>Just Kitten Around</p>
+      </div>
+    </div>
+    -->
+<!--
+<script>
+  $('.navbar-lower').affix({
+    offset: {top: 50}
+  });
+</script>
+-->

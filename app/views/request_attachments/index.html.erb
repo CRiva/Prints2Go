@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Request Attachments</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Request</th>
+      <th>File</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @request_attachments.each do |request_attachment| %>
+      <tr>
+        <td><%= request_attachment.request_id %></td>
+        <td><%= request_attachment.file %></td>
+        <td><%= link_to 'Show', request_attachment %></td>
+        <td><%= link_to 'Edit', edit_request_attachment_path(request_attachment) %></td>
+        <td><%= link_to 'Destroy', request_attachment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Request Attachment', new_request_attachment_path %>

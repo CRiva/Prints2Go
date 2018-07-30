@@ -1,0 +1,1 @@
+::Samanage = Samanage::Api.new(token: Rails.application.secrets.TMJWT)

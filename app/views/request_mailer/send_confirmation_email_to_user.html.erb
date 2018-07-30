@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Your Prints2Go Request is being processed, <%= @user %>!</h1>
+    <h3>Thanks for your business!</h3>
+    <h4>
+    	Here are the details of your request:
+    </h4>
+    <p>
+    	Jobtitle: <%= @request.jobtitle %>
+	</p>
+	<p>
+    	Estimated Price: $<%= @request.estimate %>
+    </p>
+  </body>
+</html>

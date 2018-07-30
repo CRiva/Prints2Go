@@ -1,0 +1,59 @@
+<%= form_for [@cost, @cost_dependency], :remote => true, :html => {:class => "form-group"} do |f| %>
+
+<br>
+<div class="row westmontTextMuseo3">
+	<div class="col-xs-12">
+		<% if @cost_dependency.errors.any? %>
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>Warning!</strong> <%= pluralize(@cost_dependency.errors.count, "error") %> prevented your cost from being saved! They are: <%= @cost_dependency.errors.full_messages.join(", ") %>. 
+		</div>
+		<% end %>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-10 col-xs-offset-1">
+		<div class="row center-block">
+			<div class="col-xs-3 center-block">
+				<%= f.label :dependency_category, "Dependecy Category" %>
+				<%= f.select :dependency_category, options_for_select(getAllCategories, :selected => @cost_dependency.dependency_category.nil? ? 'Please Select' : @cost_dependency.dependency_category), {}, {:required => true, :class => 'form-control', id: "dependency-category-select"} %>
+				<div id="new-dependency-category">
+					<br>
+					<%= f.label :dependency_category, "New Dependency Category Name" %>
+					<%= f.text_field :dependency_category, :class => 'form-control', placeholder: "e.g. Size", id: 'new-dependency-category-text'%>
+				</div>
+			</div>
+			<div class="col-xs-3 ">
+				<%= f.label :dependency_option, "Option Name" %>
+				<%= f.select :dependency_option, options_for_select(getAppropriateOptions, :selected => @cost_dependency.dependency_option.nil? ? 'Select a Category' : @cost_dependency.dependency_option), {}, {:required => true, :class => 'form-control', id: "dependency-option-select"} %>
+				<div id="new-dependency-option">
+					<br>
+					<%= f.label :dependency_option, "New Dependency Option Name" %>
+					<%= f.text_field :dependency_option, :class => 'form-control', placeholder: "e.g. 8.5\" x 11\"", id: 'new-dependency-option-text'%>
+				</div>
+			</div>
+			<div class="col-xs-3">
+				<%= f.label :per_job, "Cost per job" %>
+				<div class="input-group">
+					<span class="input-group-addon">$</span>
+					<%= f.number_field :per_job, :class => 'form-control', :step => 0.01 %>
+				</div>
+			</div>
+			<div class="col-xs-3" >
+				<%= f.label :per_page, "Cost per page" %>
+				<div class="input-group">
+					<span class="input-group-addon">$</span>
+					<%= f.number_field :per_page, :class => 'form-control', :step => 0.01 %>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div>
+			<%= f.submit (@edit)? 'Update Cost Dependency':'Submit Cost Dependency', :class => 'btn btn-info btn-lg' %>
+		</div>
+	</div>
+</div>
+
+
+<% end %>

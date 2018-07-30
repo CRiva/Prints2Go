@@ -1,0 +1,1 @@
+json.partial! "request_attachments/request_attachment", request_attachment: @request_attachment

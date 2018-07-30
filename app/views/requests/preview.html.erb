@@ -1,0 +1,55 @@
+<% unless notice.blank? %>
+	<% if flash[:notice] %>
+		<div class="alert alert-success"><%= flash[:notice] %></div>
+	<% elsif flash[:alert] %>
+		<div class="alert alert-error"><%= flash[:alert] %></div>
+	<% end %>
+<% end %>
+
+<h2 class="westmontTextMuseo3">
+	<% if admin %>
+		Unbilled Prints
+	<% else %>
+		Your Unbilled Prints
+	<% end %>
+</h2>
+<br>
+<% if admin %> 
+	<%= link_to "Download Recent Prints",  "/requests/preview", class: "btn btn-info", id: "csvDownloadBtn" %>
+<% end %>
+<div class="row" style="margin-top: 20px;">
+	<div class="col-xs-12" >
+		<table class="table table-striped" style="box-shadow: 3px 3px 10px grey, -3px 3px 10px grey;">
+			<thead style="background-color: #5bc0de">
+				<tr class="westmontTextMuseo9">
+					<th class="text-center">Date</th>
+					<th class="text-center">Requester</th>
+					<th class="text-center">Jobtitle</th>
+					<th class="text-center">Total Number Pages</th>
+					<th class="text-center">Base Price</th>
+					<th class="text-center">Price Adjust</th>
+					<th class="text-center">Total</th>
+					<th class="text-center">Account</th>
+				</tr>
+			</thead>
+			<tbody>
+				<%= will_paginate @requests %>
+				<% @requests.each do |request| %>
+					<tr>
+						<td><%= request.updated_at.strftime("%-m/%-d/%Y")%></td>
+						<td><%= request.requester %></td>
+						<td><%= request.jobtitle %></td>
+						<td><%= request.copies.to_i * request.originals.to_i %></td>
+						<td><%= request.estimate %></td>
+						<td>
+							<%= request.otherestimate %>
+							<%= admin ? (link_to "", "/requests/#{request.id}/preview", class: "glyphicon glyphicon-pencil", style: "color: black") : "" %>
+						</td>
+						<td><%= request.estimate + request.otherestimate %></td>
+						<td><%= request.costcenter %></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

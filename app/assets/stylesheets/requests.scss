@@ -1,0 +1,29 @@
+// Place all the styles related to the Requests controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.swatch {
+  width:40px;
+  height:40px;
+  border-radius:5px;
+  border: 2px solid #555;
+  margin: 2px
+}
+
+.swatch-main {
+	height: 70px;
+	width: 70px;
+	border-radius: 5px;
+	border: 2px solid #888;
+	margin-left: 15px;
+	text-align: center;	
+}
+
+.swatch-clickable:hover {
+  border: 2px solid #000;
+  cursor: pointer;
+}
+
+th > a:link,
+th > a:visited,
+th > a:active,
+th > a:hover { color: black; text-decoration: underline; }

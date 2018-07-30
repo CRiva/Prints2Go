@@ -1,0 +1,86 @@
+<% unless notice.blank? %>
+	<% if flash[:notice] %>
+		<div class="alert alert-success"><%= flash[:notice] %></div>
+	<% elsif flash[:alert] %>
+		<div class="alert alert-error"><%= flash[:alert] %></div>
+	<% end %>
+<% end %>
+
+
+<h2 style="color: #49afcd" class="center-block westmontTextMuseo3">Costs for print options</h2>
+<% if admin %>
+	<a class="westmontTextMuseo3 btn btn-default btn-sm" href="/costs/new"> New Cost </a>
+	<br>
+<% end %>
+<br>
+<div class="row">
+	<div class="col-xs-12">
+		<table class="table table-striped" style="box-shadow: 3px 3px 10px grey, -3px 3px 10px grey">
+			<thead style="background-color: #5bc0de">
+				<tr>
+					<th class="text-center">Category</th>
+					<th class="text-center">Print Option</th>
+					<th class="text-center">Cost Per Job</th>
+					<th class="text-center">Cost Per Page</th>
+					<th class="text-center">
+						Dependencies <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-trigger="hover" title="Dependencies" data-placement="top" data-html="true" data-content="<h5 class='text-center'>Costs can change based on whether another Print Option is selected<br><br>For example, the price for a Black/White print is $0.04 a page, but if the '2-sided' option is selected, the price becomes $0.03 a page</h5>"></span>
+					</th>
+					<% if admin %>
+						<th class="text-center">Action</th>
+					<% end %>
+				</tr>
+			</thead>
+			<tbody>
+				<% @costs.each do |cost| %>
+				<tr>
+					<td style="vertical-align:middle !important"><%= cost.category %></td>
+					<td style="vertical-align:middle !important"><%= cost.option %></td>
+					<td style="vertical-align:middle !important"><%= '$'+cost.per_job.to_s %></td>
+					<td style="vertical-align:middle !important"><%= '$'+cost.per_page.to_s %></td>
+					<td style="vertical-align:middle !important">
+						<div class="btn-group" style="margin:0; height:100%; float: center !important">
+							<%if Cost.where(:id => cost.id)[0].cost_dependencies.empty? %>
+								<span class="btn btn-warning" data-toggle="popover" data-trigger="hover" data-placement="top" data-html="true" data-content="<h5 class='text-center' style='color: black;'>No Dependencies for this Cost</h5>"><i class="glyphicon glyphicon-eye-close"></i></span>
+							<% else %>
+								<button class="btn btn-info" data-toggle="modal" data-target="#modal-window" id="setfocus">
+									<%= hidden_field_tag "cost_id", cost.id %>
+									<%= hidden_field_tag "cost", Cost.where(:id => cost.id)[0] %>
+									<span class="glyphicon glyphicon-eye-open"></span>
+								</button>
+							<% end %>
+							<% if admin %>
+								<button class="btn btn-success" data-toggle="modal"
+								data-target="#new-dependency-modal-window" id="newdependency">
+									<%= hidden_field_tag "cost_id", cost.id %>
+									<span class="glyphicon glyphicon-plus"></span>
+								</button> 
+							<% end %>	
+						</div>
+					</td>
+					<% if admin %>
+					<td style="vertical-align:middle !important">
+							<div class="btn-group" style="margin:0; height:100%; float: center !important">
+								<%= link_to '<i class="glyphicon glyphicon-pencil"></i>'.html_safe, "/costs/#{cost.id}/edit", class: 'btn btn-info'%>
+								<%= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, cost, method: :delete, data: { confirm: 'Are you sure?' },  class: 'btn btn-danger' %>	
+							</div>
+						
+					</td>
+					<% end %>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>	
+	</div>
+</div>
+
+<div id="modal-window" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document" id="cost_dependencies_modal" style="width:85%">
+
+	</div>
+</div>
+<div id="new-dependency-modal-window" class="modal fade" role="dialog" aria-labelledby="myNewDependencyModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document" id="new_cost_dependency_modal" style="width: 85%">
+
+	</div>
+</div>
+
